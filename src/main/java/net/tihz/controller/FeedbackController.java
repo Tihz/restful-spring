@@ -1,6 +1,8 @@
 package net.tihz.controller;
 
-import net.tihz.model.Feedback;
+import net.tihz.query.model.FeedbackChannelFacet;
+import net.tihz.query.model.FeedbackDocument;
+import net.tihz.repository.model.FeedbackEntity;
 import net.tihz.service.FeedbackService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,17 +21,27 @@ public class FeedbackController {
     private FeedbackService service;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Feedback load(@PathVariable Long id) {
+    public FeedbackEntity load(@PathVariable Long id) {
         return service.load(id);
     }
 
     @RequestMapping(value = "/count", method = RequestMethod.GET)
-    public Long load(String organisationName) {
+    public Integer count(String organisationName) {
         return service.count(organisationName);
     }
 
     @RequestMapping(value = "/solr", method = RequestMethod.GET)
-    public List<Feedback> solr() {
+    public List<FeedbackDocument> solr() {
         return service.solr();
+    }
+
+    @RequestMapping(value = "/content", method = RequestMethod.GET)
+    public List<FeedbackDocument> content(String title, String text) {
+        return service.content(title, text);
+    }
+
+    @RequestMapping(value = "/facet", method = RequestMethod.GET)
+    public List<FeedbackChannelFacet> facet() {
+        return service.facet();
     }
 }

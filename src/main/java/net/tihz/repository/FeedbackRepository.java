@@ -1,27 +1,32 @@
 package net.tihz.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
-import net.tihz.repository.core.CoreRepository;
+import net.tihz.jooq.tables.Feedback;
 import net.tihz.repository.model.FeedbackEntity;
-import net.tihz.repository.model.QFeedbackEntity;
+import org.jooq.DSLContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class FeedbackRepository extends CoreRepository<FeedbackEntity> {
+public class FeedbackRepository {
 
-    private static final QFeedbackEntity feedback = QFeedbackEntity.feedbackEntity;
+    @Autowired
+    private DSLContext create;
+
+    private static final Feedback feedback = Feedback.FEEDBACK;
+
+    public Integer count(String organisationName) {
+        return create.selectCount()
+                .from(feedback)
+                .where(feedback.ORGANISATION_NAME.eq(organisationName))
+                .fetchOneInto(Integer.class);
+    }
 
     public FeedbackEntity load(Long id) {
 
-        JPAQuery<FeedbackEntity> query = query();
-        query.from(feedback).where(feedback.id.eq(id));
-        return query.fetchOne();
+        return create.select()
+                .from(feedback)
+                .where(feedback.ID.eq(id))
+                .fetchOneInto(FeedbackEntity.class);
     }
 
-
-    public Long count(String organisationName) {
-        JPAQuery<FeedbackEntity> query = query();
-        query.from(feedback).where(feedback.organisationName.eq(organisationName));
-        return query.fetchCount();
-    }
 }

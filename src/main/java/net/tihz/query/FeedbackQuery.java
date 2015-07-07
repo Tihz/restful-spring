@@ -1,33 +1,15 @@
 package net.tihz.query;
 
 import net.tihz.query.model.FeedbackDocument;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.solr.repository.SolrCrudRepository;
 
 import java.util.List;
 
-@Repository
-public class FeedbackQuery {
+public interface FeedbackQuery extends SolrCrudRepository<FeedbackDocument, String>, FeedbackCustomQuery {
 
-    @Autowired
-    private SolrServer solrServer;
+    public List<FeedbackDocument> findByTitleContainsAndTextContains(String title, String text);
 
-    public List<FeedbackDocument> find() {
+    public List<FeedbackDocument> findByTitleContains(String title);
 
-        SolrQuery query = new SolrQuery();
-        query.setQuery("*:*");
-
-        QueryResponse response = null;
-        try {
-            response = solrServer.query(query);
-        } catch (SolrServerException e) {
-            throw new RuntimeException("Solr Exception", e);
-        }
-        return response.getBeans(FeedbackDocument.class);
-
-    }
+    public List<FeedbackDocument> findByTextContains(String text);
 }
