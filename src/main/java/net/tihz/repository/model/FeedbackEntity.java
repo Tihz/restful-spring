@@ -1,12 +1,18 @@
-package net.tihz.model;
+package net.tihz.repository.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Feedback implements Serializable {
+@Entity
+public class FeedbackEntity implements Serializable {
 
+    @Id
     private Long id;
 
+    @Column(name = "organisation_name")
     private String organisationName;
 
     private String channel;
